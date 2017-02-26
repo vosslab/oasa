@@ -307,7 +307,7 @@ def point_at_distance_from_line( x1, y1, x2, y2, d):
 
 def intersection_of_two_lines (x1,y1,x2,y2,x3,y3,x4,y4,parallel_detection_threshold=3):
   """lines 1-2 and 3-4
-  returns x,y, 0 if succesful or 1 if parallel
+  returns x-coord, y-coord , paralell(0 or 1), on line (0=no line, 1=on line 1-2, 2=on line 3-4, 3=on both) 
   y=mx+c is used
   parallel_detection_threshold is a negative decadic logarithm of minimal displacement of m
   that is considered parallel"""
