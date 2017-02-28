@@ -345,6 +345,31 @@ def intersection_of_two_lines (x1,y1,x2,y2,x3,y3,x4,y4,parallel_detection_thresh
   return rex,rey,0,online
 
 
+def intersection_of_line_and_polygon (line, polygon):
+  """Calculates intersection points between an infinite line (list of four coords) and a closed
+      polygon (list of 2N coords).
+      Returns a list of unique (x,y) tuples representing intersections."""
+  
+  intersections = []
+  for pnt in range(0, len(polygon),2):
+    # Intersection for each polygon segment.
+    x_S = polygon[pnt]
+    y_S = polygon[pnt+1]
+    if pnt+2 == len(polygon):
+      x_E = polygon[0]
+      y_E = polygon[1]
+    else:
+      x_E = polygon[pnt+2]
+      y_E = polygon[pnt+3]
+    
+    x, y, parallel, segmnt = intersection_of_two_lines(line[0], line[1], line[2], line[3],
+                                                       x_S , y_S, x_E, y_E )
+    # If intersection is inside polygon and unique, append.
+    if (segmnt in (2,3) and not (x,y) in intersections):
+      intersections.append( (x, y) )
+  
+  return intersections  
+
 def mirror_point_on_line (xa,ya,x1,y1,x2,y2):
   """mirroring point a on line 1-2"""
   if x1-x2 == 0:                           #y=mc+c is used
