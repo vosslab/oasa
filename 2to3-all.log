@@ -1,0 +1,910 @@
+--- ./convert.py	(original)
++++ ./convert.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ try:
+   import oasa
+@@ -27,7 +27,7 @@
+ 
+ # small helper function
+ def bug_message():
+-  sys.stderr.write( "Error: the library crashed with the following exception:\n%s\n" % sys.exc_value)
++  sys.stderr.write( "Error: the library crashed with the following exception:\n%s\n" % sys.exc_info()[1])
+   sys.stderr.write( "If you are sure your input is OK, please send me a bugreport to beda@zirael.org\n")
+ 
+ 
+@@ -131,7 +131,7 @@
+   # interactive mode
+   import readline
+   try:
+-    text = raw_input( recoding[inmode]+": ")
++    text = input( recoding[inmode]+": ")
+   except:
+     text = ''
+   while text:
+@@ -144,7 +144,7 @@
+     outfile.write("\n")
+     sys.stderr.write( "processing time %.2f ms\n" % ((time.time()-t)*1000))
+     try:
+-      text = raw_input( recoding[inmode]+": ")
++      text = input( recoding[inmode]+": ")
+     except:
+       text = ''
+ 
+--- ./test.py	(original)
++++ ./test.py	(refactored)
+@@ -1,4 +1,4 @@
+-from __future__ import print_function
++
+ 
+ import oasa
+ #print(oasa.CAIRO_AVAILABLE)
+--- ./unittests.py	(original)
++++ ./unittests.py	(refactored)
+@@ -414,7 +414,7 @@
+     mol = mols[0]
+     mate, nrex = mol.get_maximum_matching()
+     self.assertEqual( nrex,exposed_vs_num)
+-    self.assertEqual( len( [v for v,m in mate.items() if m!=0]), 2*match_pair_num)
++    self.assertEqual( len( [v for v,m in list(mate.items()) if m!=0]), 2*match_pair_num)
+ 
+ # this creates individual test for substructures
+ for i in range( len( TestGraphMatching.formulas)):
+--- ./oasa/inchi.py	(original)
++++ ./oasa/inchi.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import re
+ import os
+@@ -175,7 +175,7 @@
+ 
+       # here we check out if the molecule seems ok
+       fvs = [v for v in self.structure.vertices if v.free_valency]
+-      if not fvs and not filter( None, [not v.order for v in self.structure.edges]):
++      if not fvs and not [_f for _f in [not v.order for v in self.structure.edges] if _f]:
+         repeat = False
+       else:
+         if len( fvs) == 1:
+@@ -245,8 +245,8 @@
+     if not layer:
+       return
+     chunks = re.split( "([0-9]*)", layer)
+-    chunks = filter( None, chunks)
+-    chunks = filter( lambda x: x!='-', chunks)
++    chunks = [_f for _f in chunks if _f]
++    chunks = [x for x in chunks if x!='-']
+     last_atom = None
+     bracket_openings = []
+     for c in chunks:
+@@ -365,7 +365,7 @@
+         assert steps < 10
+ 
+         for v in self.structure.vertices:
+-          if v.symbol != 'C' and not v.free_valency and filter( None, [n.free_valency for n in v.neighbors]):
++          if v.symbol != 'C' and not v.free_valency and [_f for _f in [n.free_valency for n in v.neighbors] if _f]:
+             v.charge = charge
+             charge = 0
+             change = True
+@@ -641,10 +641,10 @@
+       for p in head.split( ","):
+         if "-" in p:
+           try:
+-            a, b = map( int, p.split("-"))
++            a, b = list(map( int, p.split("-")))
+           except Exception as e:
+             raise oasa_inchi_error( "error in hydrogen layer - non-number character(s) present in atom range specification")
+-          vertices.extend( range( a, b+1))
++          vertices.extend( list(range( a, b+1)))
+         else:
+           try:
+             vertices.append( int( p))
+@@ -896,7 +896,7 @@
+     t1 = time.time()
+     for jj in range( cycles):
+       mol = text_to_mol( text, calc_coords=True, include_hydrogens=False)
+-      print(map( str, [b for b in mol.bonds if b.order == 0]))
++      print(list(map( str, [b for b in mol.bonds if b.order == 0])))
+       print("  smiles: ", smiles.mol_to_text( mol))
+       print("  inchi:  ", generate_inchi( mol, fixed_hs=False, program="/home/beda/bin/stdinchi-1"))
+       print("  charge: ", sum( [a.charge for a in mol.vertices]))
+--- ./oasa/periodic_table.py	(original)
++++ ./oasa/periodic_table.py	(refactored)
+@@ -181,7 +181,7 @@
+   if sys.version_info[0] > 2:
+     return isinstance(obj, str)
+   else:
+-    return isinstance(obj, basestring) or isinstance(obj, unicode)
++    return isinstance(obj, str) or isinstance(obj, str)
+ 
+ 
+ class formula_dict( dict):
+@@ -195,7 +195,7 @@
+     if _myisustr(form):
+       self.read_formula_string( form)
+     elif isinstance(form, dict):
+-      for key, val in form.items():
++      for key, val in list(form.items()):
+         if key in periodic_table and isinstance(val, int):
+           self[ key] = val
+         else:
+@@ -236,7 +236,7 @@
+     if not isinstance(other, int):
+       raise TypeError("formula_dict can be only multiplied by an integer")
+     res = formula_dict()
+-    for key in self.keys():
++    for key in list(self.keys()):
+       res[key] = other * self[key]
+     return res
+ 
+@@ -372,9 +372,9 @@
+ def gen_bit_masks( length):
+   ret = length * [0]
+   yield ret
+-  for i in xrange( 2 ** length):
++  for i in range( 2 ** length):
+     ret[0] += 1
+-    for j in xrange( length):
++    for j in range( length):
+       if ret[j] == 2:
+         ret[j] = 0
+         if j == length-1:
+--- ./oasa/misc.py	(original)
++++ ./oasa/misc.py	(refactored)
+@@ -41,7 +41,7 @@
+   if sys.version_info[0] > 2:
+     return isinstance(obj, str)
+   else:
+-    return isinstance(obj, basestring)
++    return isinstance(obj, str)
+ 
+ 
+ def intersection( a, b):
+@@ -122,7 +122,7 @@
+ 
+ def lazy_apply( function, arguments):
+   """similar to apply but returns a callable (lambda) that performs the apply when called."""
+-  return lambda: apply( function, arguments)
++  return lambda: function(*arguments)
+ 
+ 
+ 
+@@ -188,11 +188,11 @@
+ 
+ # some helper, higher order functions
+ 
+-map_functions = lambda funcs, value: zip( apply, funcs, len(funcs)*[value])
+-
+-something_true = lambda vals: len( filter( None, vals))
+-
+-some_apply = lambda func, vals: something_true( map( func, vals))
++map_functions = lambda funcs, value: list(zip( apply, funcs, len(funcs)*[value]))
++
++something_true = lambda vals: len( [_f for _f in vals if _f])
++
++some_apply = lambda func, vals: something_true( list(map( func, vals)))
+ 
+ 
+ 
+@@ -207,7 +207,7 @@
+   if n==0:
+     yield []
+   else:
+-    for i in xrange( len(items)-n+1):
++    for i in range( len(items)-n+1):
+       for v in gen_variations(items[i+1:],n-1):
+         yield [items[i]]+v
+ 
+@@ -216,7 +216,7 @@
+   if n==0:
+     yield []
+   else:
+-    for i in xrange( len( items)):
++    for i in range( len( items)):
+       for v in gen_combinations( [x for x in items if x!=items[i]], n-1):
+         yield [items[i]]+v
+ 
+--- ./oasa/name_database.py	(original)
++++ ./oasa/name_database.py	(refactored)
+@@ -17,14 +17,14 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import os
+ 
+ try:
++  import dbm.ndbm
++except ImportError:
+   import dbm
+-except ImportError:
+-  import anydbm
+ 
+ from . import inchi_key
+ from . import inchi as inchimod
+@@ -57,9 +57,9 @@
+ 
+ 
+ def mydb_to_gdbm( infilename, outfilename):
+-    import gdbm
++    import dbm.gnu
+     with open(infilename, 'r') as infile:
+-      base = gdbm.open(outfilename, 'n')
++      base = dbm.gnu.open(outfilename, 'n')
+       for line in infile:
+           rec = database_string_to_compound(line)
+           base[rec['inchikey']] = rec['cid'] + " " + rec['name']
+@@ -72,7 +72,7 @@
+             break
+     else:
+         raise Exception("Name database not found")
+-    base = anydbm.open( fname)
++    base = dbm.open( fname)
+     if inchikey in base:
+         cid, name = base[ inchikey].split( " ", 1)
+         return {'inchikey': inchikey, 'cid': cid, 'name': name}
+--- ./oasa/pybel_bridge.py	(original)
++++ ./oasa/pybel_bridge.py	(refactored)
+@@ -20,7 +20,7 @@
+ """This module is intended for integration of OpenBabel/Pybel into OASA.
+ It provides functionality for translation of OASA molecules into Pybel molecules."""
+ 
+-from __future__ import print_function
++
+ 
+ import pybel, openbabel
+ 
+@@ -31,7 +31,7 @@
+ 
+ 
+ 
+-num2symbol = dict((v['ord'], k) for k, v in PT.items())
++num2symbol = dict((v['ord'], k) for k, v in list(PT.items()))
+ 
+ 
+ class PybelConverter( object):
+@@ -171,7 +171,7 @@
+   def __init__( self, mol, forcefield_name="Ghemical"):
+     self.mol = mol
+     self._amol, self._oatom2patom_idx = PybelConverter.oasa_to_pybel_molecule_with_atom_map( self.mol)
+-    self._patom_idx2oatom = dict((v, k) for k, v in self._oatom2patom_idx.items())
++    self._patom_idx2oatom = dict((v, k) for k, v in list(self._oatom2patom_idx.items()))
+     self.forcefield_name = forcefield_name
+     self.ff = openbabel.OBForceField.FindForceField( self.forcefield_name)
+     self.ff.Setup( self._amol.OBMol)
+--- ./oasa/structure_database.py	(original)
++++ ./oasa/structure_database.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import os, sys, re
+ try:
+@@ -123,8 +123,8 @@
+             from . import inchi_key
+             kw['inchikey'] = inchi_key.key_from_inchi( kw['inchi'])
+         del kw['inchi']
+-    search = ["%s=?" % k for k in kw.keys()]
+-    values = kw.values()
++    search = ["%s=?" % k for k in list(kw.keys())]
++    values = list(kw.values())
+     tables = "structures"
+     if "synonym" in kw:
+         tables = "structures, synonyms"
+--- ./oasa/molecule.py	(original)
++++ ./oasa/molecule.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import copy
+ import math
+@@ -305,7 +305,7 @@
+       if not b.aromatic:
+         self.temporarily_disconnect_edge( b)
+     self.temporarily_strip_bridge_edges()
+-    ring_clusters = map( list, [sub for sub in self.get_connected_components() if len( sub) > 1])
++    ring_clusters = list(map( list, [sub for sub in self.get_connected_components() if len( sub) > 1]))
+     self.reconnect_temporarily_disconnected_edges()
+     # now proceed in localizing double bonds in each one
+     for cluster in ring_clusters:
+@@ -342,7 +342,7 @@
+           ok = True
+           if not nrex:
+             # there are no exposed vertices
+-            for work_v, work_n in mate.items():
++            for work_v, work_n in list(mate.items()):
+               if work_n != 0:
+                 work_e = work_v.get_edge_leading_to( work_n)
+                 work_e.properties_['original'].order = 2
+@@ -385,8 +385,8 @@
+     they will be properly localized but marked as non-aromatic"""
+     erings = self.get_smallest_independent_cycles_e()
+     # filter off rings without aromatic bonds
+-    erings = filter( lambda x: len( [b for b in x if b.aromatic]), erings)
+-    rings = map( self.edge_subgraph_to_vertex_subgraph, erings)
++    erings = [x for x in erings if len( [b for b in x if b.aromatic])]
++    rings = list(map( self.edge_subgraph_to_vertex_subgraph, erings))
+     # sort rings
+     rings.sort( lambda x,y: len(y)%2 - len(x)%2) # odd size rings first
+     last_rings = []
+@@ -691,7 +691,7 @@
+       vsset = frozenset( vs)
+       if vsset not in yielded:
+         if self._freesites_match( other, thread):
+-          yield [v for v in vs if not 'implicit_hydrogen' in v.properties_.keys()]
++          yield [v for v in vs if not 'implicit_hydrogen' in list(v.properties_.keys())]
+       yielded.add( vsset)
+ 
+     if auto_cleanup:
+@@ -705,7 +705,7 @@
+         v.free_sites = v.properties_['old_free_sites']
+         del v.properties_['old_free_sites']
+     # finally we remove the added implicit hydrogens
+-    hs = [v for v in self.vertices if 'implicit_hydrogen' in v.properties_.keys()]
++    hs = [v for v in self.vertices if 'implicit_hydrogen' in list(v.properties_.keys())]
+     for v in hs:
+       del v.properties_['implicit_hydrogen']
+       self.remove_vertex( v)
+@@ -714,7 +714,7 @@
+     for v in other.vertices:
+       if 'implicit_hydrogen' not in v.properties_:
+         v.explicit_hydrogens = len( [h for h in v.neighbors if 'implicit_hydrogen' in h.properties_])
+-    hs = [v for v in other.vertices if 'implicit_hydrogen' in v.properties_.keys()]
++    hs = [v for v in other.vertices if 'implicit_hydrogen' in list(v.properties_.keys())]
+     for v in hs:
+       del v.properties_['implicit_hydrogen']
+       other.remove_vertex( v)
+@@ -773,7 +773,7 @@
+         else:
+           pass
+ 
+-      threads = [i for i in v.properties_['subsearch'].keys() if i >= thread]
++      threads = [i for i in list(v.properties_['subsearch'].keys()) if i >= thread]
+       if thread in threads:
+         threads.remove( thread)
+         yield thread
+--- ./oasa/coords_generator.py	(original)
++++ ./oasa/coords_generator.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import division, print_function
++
+ 
+ import misc
+ import warnings
+@@ -63,7 +63,7 @@
+         backbone = atms
+       else:
+         # we should not be here, but when yes than we have to solve it
+-        maxlength = max( map( len, subs))
++        maxlength = max( list(map( len, subs)))
+         backbone = [su for su in subs if len( su) == maxlength][0]
+         # we have to set the coords to None (for sure)
+         for sub in subs:
+@@ -465,7 +465,7 @@
+   try:
+     from tkinter import Tk, Canvas, Frame
+   except ImportError:
+-    from Tkinter import Tk, Canvas, Frame
++    from tkinter import Tk, Canvas, Frame
+ 
+   app = Tk()
+   app.title( "oasa")
+--- ./oasa/converter_base.py	(original)
++++ ./oasa/converter_base.py	(refactored)
+@@ -38,7 +38,7 @@
+ 
+   def __init__( self):
+     self.configuration = {}
+-    for k, v in self.default_configuration.items():
++    for k, v in list(self.default_configuration.items()):
+       self.configuration[k] = v
+     self.cleanup()
+ 
+--- ./oasa/molfile.py	(original)
++++ ./oasa/molfile.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ from .plugin import plugin
+ from .molecule import molecule
+@@ -202,7 +202,7 @@
+     else:
+       rad_line = None
+     # return m_lines
+-    m_lines = filter( None, [rad_line])
++    m_lines = [_f for _f in [rad_line] if _f]
+     return m_lines
+ 
+   def _read_molfile_charge( self, value):
+@@ -244,7 +244,7 @@
+ try:
+   from io import StringIO
+ except ImportError:
+-  from cStringIO import StringIO
++  from io import StringIO
+ 
+ reads_text = 1
+ reads_files = 1
+--- ./oasa/graph/graph.py	(original)
++++ ./oasa/graph/graph.py	(refactored)
+@@ -22,7 +22,7 @@
+ Suitable for analysis of chemical problems.
+ """
+ 
+-from __future__ import print_function
++
+ 
+ import copy
+ import time
+@@ -301,7 +301,7 @@
+     self.disconnect( v1, v2)
+     ps = [i for i in self.get_connected_components()]
+     self.add_edge( v1, v2, e=e)
+-    return map( len, ps)
++    return list(map( len, ps))
+ 
+ 
+   ## ANALYSIS
+@@ -445,7 +445,7 @@
+       v = to_go.pop()
+       cycles = self._get_cycles_for_vertex( v, to_reach=v)
+       all_cycles += cycles
+-      to_go -= set(ver for ver in set().union(*map(self.edge_subgraph_to_vertex_subgraph, cycles))
++      to_go -= set(ver for ver in set().union(*list(map(self.edge_subgraph_to_vertex_subgraph, cycles)))
+                            if ver.degree == 2)
+     all_cycles = set( map( frozenset, all_cycles))
+ 
+@@ -464,7 +464,7 @@
+       v = to_go.pop()
+       cycles = self._get_cycles_for_vertex( v, to_reach=v)
+       all_cycles += cycles
+-      to_go -= set(ver for ver in set().union(*map(self.edge_subgraph_to_vertex_subgraph, cycles))
++      to_go -= set(ver for ver in set().union(*list(map(self.edge_subgraph_to_vertex_subgraph, cycles)))
+                            if ver.degree == 2)
+     all_cycles = set( map( frozenset, all_cycles))
+     return all_cycles
+@@ -556,7 +556,7 @@
+               path.update( now)
+             if path:
+               paths.add( frozenset( path))
+-          l = max( map( len, paths))
++          l = max( list(map( len, paths)))
+           path = [p for p in paths if len( p) == l][0]
+           # now mark them for disconnection
+           v1 = set( path).pop()
+@@ -588,7 +588,7 @@
+       # now try to remove the biggest ones
+       while len( cs) - ncycles > 0:
+         c = set( cs.pop( -1))
+-        if not c <= set().union(*map(set, cs)):
++        if not c <= set().union(*list(map(set, cs))):
+           cs.insert( 0, c)
+       cycles = set( [frozenset( _c) for _c in cs])
+ 
+@@ -668,11 +668,11 @@
+     use get_all_cycles_e to get the edge variant, which is better for building new
+     graphs as the mapping edges => vertices is unambiguous, while edges=>vertices=>edges might
+     include some more edges"""
+-    return map( self.edge_subgraph_to_vertex_subgraph, self.get_all_cycles_e_old())
++    return list(map( self.edge_subgraph_to_vertex_subgraph, self.get_all_cycles_e_old()))
+ 
+ 
+   def get_all_cycles_e( self):
+-    return map( self.vertex_subgraph_to_edge_subgraph, self.get_all_cycles())
++    return list(map( self.vertex_subgraph_to_edge_subgraph, self.get_all_cycles()))
+ 
+ 
+   def get_all_cycles( self):
+@@ -998,7 +998,7 @@
+     for i in range( num):
+       self.add_vertex( self.create_vertex())
+     for line in f:
+-      i1, i2 = map( int, line.split())
++      i1, i2 = list(map( int, line.split()))
+       self.add_edge( self.vertices[i1], self.vertices[i2])
+ 
+   def path_exists( self, a1, a2):
+@@ -1101,7 +1101,7 @@
+     while nrex > 1:
+       #print("NREEEEEEX", nrex)
+       #self._print_mate( mate)
+-      exposed = [v for v,m in mate.items() if m == 0]
++      exposed = [v for v,m in list(mate.items()) if m == 0]
+       aug = self.find_augmenting_path_from( exposed[0], mate)
+       if not aug:
+         break
+@@ -1112,7 +1112,7 @@
+ 
+   def _print_mate( self, mate):
+     print("MATE", end='')
+-    for k,v in mate.items():
++    for k,v in list(mate.items()):
+       if v:
+         print("%d-%d" % (self.vertices.index(k), self.vertices.index(v)), end='')
+     print("END")
+@@ -1383,7 +1383,7 @@
+     if n==0:
+       yield []
+     else:
+-      for i in xrange( len(items)-n+1):
++      for i in range( len(items)-n+1):
+         for v in gen_variations(items[i+1:],n-1):
+           yield [items[i]]+v
+ 
+--- ./oasa/graph/vertex.py	(original)
++++ ./oasa/graph/vertex.py	(refactored)
+@@ -65,7 +65,7 @@
+   def remove_neighbor(self, v):
+     self._clean_cache()
+     to_del = None
+-    for k, vv in self._neighbors.items():
++    for k, vv in list(self._neighbors.items()):
+       if v == vv:
+         to_del = k
+         break
+@@ -77,7 +77,7 @@
+ 
+   def remove_edge_and_neighbor(self, e):
+     self._clean_cache()
+-    if e in self._neighbors.keys():
++    if e in list(self._neighbors.keys()):
+       del self._neighbors[e]
+     else:
+       raise Exception("Cannot remove non-existing edge", e)
+@@ -88,7 +88,7 @@
+     """Neighboring vertices.
+ 
+     """
+-    return [v for (e,v) in self._neighbors.items()
++    return [v for (e,v) in list(self._neighbors.items())
+                   if not e.disconnected]
+ 
+ 
+@@ -97,7 +97,7 @@
+ 
+ 
+   def get_edge_leading_to(self, a):
+-    for b, at in self._neighbors.items():
++    for b, at in list(self._neighbors.items()):
+       if a == at:
+         return b
+     return None
+@@ -120,7 +120,7 @@
+ 
+ 
+   def get_neighbor_edge_pairs(self):
+-    for e, v in self._neighbors.items():
++    for e, v in list(self._neighbors.items()):
+       if not e.disconnected:
+         yield e,v
+ 
+@@ -130,6 +130,6 @@
+     """Neighboring edges.
+ 
+     """
+-    return [e for e in self._neighbors.keys()
++    return [e for e in list(self._neighbors.keys())
+                 if not e.disconnected]
+ 
+--- ./oasa/graph/digraph.py	(original)
++++ ./oasa/graph/digraph.py	(refactored)
+@@ -22,7 +22,7 @@
+ Suitable for analysis of chemical problems.
+ """
+ 
+-from __future__ import print_function
++
+ 
+ import copy
+ import operator
+--- ./oasa/linear_formula.py	(original)
++++ ./oasa/linear_formula.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import re
+ 
+@@ -203,7 +203,7 @@
+   def expand_abbrevs( self, text):
+     # at first sort the text according to length, so that the longest are expanded first
+     # (MMTr and not Tr)
+-    keys = sorted([(len( k), k) for k in name_to_smiles.keys()], reverse=True)
++    keys = sorted([(len( k), k) for k in list(name_to_smiles.keys())], reverse=True)
+     for l, key in keys:
+       val = name_to_smiles[ key]
+       text = text.replace( key, "(!%s)" % val)
+--- ./oasa/coords_optimizer.py	(original)
++++ ./oasa/coords_optimizer.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import division, print_function
++
+ 
+ import misc
+ import warnings
+@@ -41,7 +41,7 @@
+     if n==0:
+       yield []
+     else:
+-      for i in xrange( len(items)-n+1):
++      for i in range( len(items)-n+1):
+         for v in gen_variations(items[i+1:],n-1):
+           yield [items[i]]+v
+ 
+--- ./oasa/cdml.py	(original)
++++ ./oasa/cdml.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import xml.dom.minidom as dom
+ 
+@@ -107,7 +107,7 @@
+ try:
+   from io import StringIO
+ except ImportError:
+-  from StringIO import StringIO
++  from io import StringIO
+ 
+ reads_text = 1
+ reads_files = 1
+--- ./oasa/chem_vertex.py	(original)
++++ ./oasa/chem_vertex.py	(refactored)
+@@ -123,7 +123,7 @@
+ 
+     """
+     i = 0
+-    for b in self._neighbors.keys():
++    for b in list(self._neighbors.keys()):
+       ord = b.order
+       if ord == 4:
+         ord = 1
+@@ -185,7 +185,7 @@
+ 
+ 
+   def has_aromatic_bonds( self):
+-    for b in self._neighbors.keys():
++    for b in list(self._neighbors.keys()):
+       if b.aromatic:
+         return 1
+     return 0
+--- ./oasa/dom_extensions.py	(original)
++++ ./oasa/dom_extensions.py	(refactored)
+@@ -73,7 +73,7 @@
+ 
+ 
+ def childNodesWithoutEmptySpaces( node):
+-  return filter( isNotEmptyText, node.childNodes)
++  return list(filter( isNotEmptyText, node.childNodes))
+ 
+ 
+ def isNotEmptyText( element):
+--- ./oasa/smiles.py	(original)
++++ ./oasa/smiles.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import re
+ 
+@@ -389,7 +389,7 @@
+     for e in mol.edges:
+       e.disconnected = False
+     # here tetrahedral stereochemistry is added
+-    for v, st in self._stereo_centers.items():
++    for v, st in list(self._stereo_centers.items()):
+       processed_neighbors = []
+       for n in self._processed_atoms:
+         if n in v.neighbors:
+@@ -432,7 +432,7 @@
+         else:
+           self.ring_joins.append( e)
+     try:
+-      start, end = filter(lambda x: x.degree == 1, mol.vertices)
++      start, end = [x for x in mol.vertices if x.degree == 1]
+     except:
+       #print(filter(lambda x: x.degree == 1, mol.vertices))
+       raise Exception("shit")
+@@ -475,7 +475,7 @@
+ 
+   def _create_atom_smiles( self, v):
+     self._processed_atoms.append( v)
+-    if 'aromatic' in v.properties_.keys():
++    if 'aromatic' in list(v.properties_.keys()):
+       symbol = v.symbol.lower()
+     else:
+       symbol = v.symbol
+@@ -548,7 +548,7 @@
+         if len( ps) == 1:
+           print("impossible")
+           continue
+-        lenghts = map( len, ps)
++        lenghts = list(map( len, ps))
+         ms = min( lenghts)
+         p1, p2 = ps
+         the_mol = (len( p1) < len( p2)) and p2 or p1
+@@ -584,7 +584,7 @@
+     if not mol.is_connected():
+       print("unconnected ", mol)
+     if start_from and start_from.degree > 1:
+-      e = start_from._neighbors.keys()[0]
++      e = list(start_from._neighbors.keys())[0]
+       mol.disconnect_edge( e)
+       ps = [i for i in mol.get_connected_components()]
+       if len( ps) == 1:
+@@ -617,7 +617,7 @@
+ 
+           v = (v1 in p1.vertices) and v1 or v2
+           return e, p1, v, p2
+-    print(mol, mol.is_connected(), ',', map( len, mol.get_connected_components()), ',', start_from)
++    print(mol, mol.is_connected(), ',', list(map( len, mol.get_connected_components())), ',', start_from)
+     raise Exception("fuck, how comes!?")
+ 
+   @staticmethod
+@@ -648,7 +648,7 @@
+   return False
+ 
+ def is_pure_ring(mol):
+-  return filter(lambda x: x.degree != 2, mol.vertices) == []
++  return [x for x in mol.vertices if x.degree != 2] == []
+ 
+ def match_atom_lists( l1, l2):
+   """sort of bubble sort with counter"""
+--- ./oasa/transform.py	(original)
++++ ./oasa/transform.py	(refactored)
+@@ -21,7 +21,7 @@
+ 
+ """
+ 
+-from __future__ import division
++
+ 
+ from math import cos, sin, pi
+ 
+--- ./oasa/geometry.py	(original)
++++ ./oasa/geometry.py	(refactored)
+@@ -22,7 +22,7 @@
+ (Geometric tramforms are in transform.py.)
+ """
+ 
+-from __future__ import division
++
+ 
+ import operator
+ 
+@@ -146,8 +146,8 @@
+ def intersection_of_line_and_rect( line, rect, round_edges=0):
+   """finds a point where a line and a rectangle intersect,
+   both are given as lists of len == 4"""
+-  lx0, ly0, lx1, ly1 = map( float, line)
+-  rx0, ry0, rx1, ry1 = map( float, normalize_coords( rect))
++  lx0, ly0, lx1, ly1 = list(map( float, line))
++  rx0, ry0, rx1, ry1 = list(map( float, normalize_coords( rect)))
+ 
+   # find which end of line is in the rect and reverse the line if needed
+   if (lx0 > rx0) and (lx0 < rx1) and (ly0 > ry0) and (ly0 < ry1):
+--- ./oasa/query_atom.py	(original)
++++ ./oasa/query_atom.py	(refactored)
+@@ -79,7 +79,7 @@
+ 
+   @symbol.setter
+   def symbol(self, symbol):
+-    if symbol in PT.periodic_table.keys():
++    if symbol in list(PT.periodic_table.keys()):
+       if not "query" in PT.periodic_table[ symbol]:
+         warn( "Setting normal atom symbol to a query_atom instance, do you mean it?")
+       self.symbols = set( [symbol])
+@@ -117,7 +117,7 @@
+     if self.is_query_definition( text):
+       syms = set( map( str, text[1:-1].split(",")))
+       for sym in syms:
+-        if sym not in PT.periodic_table.keys():
++        if sym not in list(PT.periodic_table.keys()):
+           raise oasa_invalid_atom_symbol( "invalid symbol in query definition", sym)
+       return syms
+     else:
+--- ./oasa/inchi_key.py	(original)
++++ ./oasa/inchi_key.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import re
+ import hashlib
+--- ./oasa/cairo_out.py	(original)
++++ ./oasa/cairo_out.py	(refactored)
+@@ -142,12 +142,12 @@
+ 
+ 
+   def __init__( self, **kw):
+-    for k, v in self.__class__.default_options.items():
++    for k, v in list(self.__class__.default_options.items()):
+       setattr( self, k, v)
+     # list of paths that contribute to the bounding box (probably no edges)
+     self._vertex_to_bbox = {} # vertex-to-bbox mapping
+     self._bboxes = [] # for overall bbox calcualtion
+-    for k,v in kw.items():
++    for k,v in list(kw.items()):
+       if k in self.__class__.default_options:
+         setattr( self, k, v)
+       else:
+--- ./oasa/subsearch.py	(original)
++++ ./oasa/subsearch.py	(refactored)
+@@ -17,7 +17,7 @@
+ 
+ #--------------------------------------------------------------------------
+ 
+-from __future__ import print_function
++
+ 
+ import os
+ 
+@@ -67,7 +67,7 @@
+             to_ignore = parts[3].strip()
+           else:
+             to_ignore = ""
+-          to_ignore = map(int, filter(None, to_ignore.split(",")))
++          to_ignore = list(map(int, [_f for _f in to_ignore.split(",") if _f]))
+           if not name.strip():
+             name = compound_type
+           sub = substructure(name,
+@@ -264,7 +264,7 @@
+               print("Invalid line in src file:", line[:-1], file=sys.stderr)
+             elif len(parts) == 3:
+               parts.append("")
+-            to_ignore = map(int, filter(None, parts[3].split(",")))
++            to_ignore = list(map(int, [_f for _f in parts[3].split(",") if _f]))
+             parts[3] = to_ignore
+             if not parts[1]:
+               parts[1] = parts[0]
+--- ./oasa/atom.py	(original)
++++ ./oasa/atom.py	(refactored)
+@@ -88,7 +88,7 @@
+     bonds_alternating_aromatic = 0
+     bonds_single_aromatic = 0
+     odd_aromatic = False
+-    for b in self._neighbors.keys():
++    for b in list(self._neighbors.keys()):
+       order = b.order
+       if order == 4:
+         if not odd_aromatic:

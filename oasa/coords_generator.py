@@ -19,7 +19,7 @@
 
 
 
-import misc
+from . import misc
 import warnings
 
 from math import pi, sqrt, sin, cos
@@ -523,8 +523,8 @@ def calculate_coords( mol, bond_length=0, force=0):
 
 if __name__ == '__main__':
 
-  import smiles
-  from molecule import molecule
+  from . import smiles
+  from .molecule import molecule
 
   #sm = "CP(c1ccccc1)(c2ccccc2)c3ccccc3"
   #sm = 'C1CC2C1CCCC3C2CC(CCC4)C4C3'

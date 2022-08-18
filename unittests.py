@@ -19,9 +19,9 @@
 
 import unittest
 
-from oasa import linear_formula
-from oasa import smiles
-from oasa.molecule import equals
+from .oasa import linear_formula
+from .oasa import smiles
+from .oasa.molecule import equals
 
 
 
@@ -205,7 +205,7 @@ class TestSMILESReactionSupport(unittest.TestCase):
 
 ## Reaction test
 
-from oasa import reaction
+from .oasa import reaction
 
 class TestReactionComponent(unittest.TestCase):
 

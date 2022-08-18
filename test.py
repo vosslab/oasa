@@ -1,6 +1,6 @@
 
 
-import oasa
+from . import oasa
 #print(oasa.CAIRO_AVAILABLE)
 
 def cairo_out_test2():

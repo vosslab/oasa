@@ -203,7 +203,7 @@ if __name__ == "__main__":
   pmol = pybel.readstring("smi", "CC(=O)O")
   omol = PybelConverter.pybel_to_oasa_molecule( pmol)
   print(omol)
-  import smiles
+  from . import smiles
   c = smiles.converter()
   print(c.mols_to_text([omol]))
 
@@ -211,7 +211,7 @@ if __name__ == "__main__":
   #print(get_supported_output_formats())
 
   if False:
-    import molfile
+    from . import molfile
     with open("tbu-benzen.mol", 'r') as f:
       mol = molfile.file_to_mol(f)
 
