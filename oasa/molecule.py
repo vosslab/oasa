@@ -21,8 +21,8 @@
 
 import copy
 import math
-import misc
 
+from . import misc
 from . import graph
 from . import common
 from . import transform3d
