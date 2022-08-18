@@ -20,7 +20,7 @@
 """This module is intended for integration of OpenBabel/Pybel into OASA.
 It provides functionality for translation of OASA molecules into Pybel molecules."""
 
-from __future__ import print_function
+
 
 import pybel, openbabel
 
@@ -31,7 +31,7 @@ from .periodic_table import periodic_table as PT
 
 
 
-num2symbol = dict((v['ord'], k) for k, v in PT.items())
+num2symbol = dict((v['ord'], k) for k, v in list(PT.items()))
 
 
 class PybelConverter( object):
@@ -171,7 +171,7 @@ class ForceFieldOptimizer( object):
   def __init__( self, mol, forcefield_name="Ghemical"):
     self.mol = mol
     self._amol, self._oatom2patom_idx = PybelConverter.oasa_to_pybel_molecule_with_atom_map( self.mol)
-    self._patom_idx2oatom = dict((v, k) for k, v in self._oatom2patom_idx.items())
+    self._patom_idx2oatom = dict((v, k) for k, v in list(self._oatom2patom_idx.items()))
     self.forcefield_name = forcefield_name
     self.ff = openbabel.OBForceField.FindForceField( self.forcefield_name)
     self.ff.Setup( self._amol.OBMol)

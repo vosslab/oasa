@@ -17,7 +17,7 @@
 
 #--------------------------------------------------------------------------
 
-from __future__ import print_function
+
 
 try:
   import oasa
@@ -27,7 +27,7 @@ except ImportError:
 
 # small helper function
 def bug_message():
-  sys.stderr.write( "Error: the library crashed with the following exception:\n%s\n" % sys.exc_value)
+  sys.stderr.write( "Error: the library crashed with the following exception:\n%s\n" % sys.exc_info()[1])
   sys.stderr.write( "If you are sure your input is OK, please send me a bugreport to beda@zirael.org\n")
 
 
@@ -131,7 +131,7 @@ else:
   # interactive mode
   import readline
   try:
-    text = raw_input( recoding[inmode]+": ")
+    text = input( recoding[inmode]+": ")
   except:
     text = ''
   while text:
@@ -144,7 +144,7 @@ else:
     outfile.write("\n")
     sys.stderr.write( "processing time %.2f ms\n" % ((time.time()-t)*1000))
     try:
-      text = raw_input( recoding[inmode]+": ")
+      text = input( recoding[inmode]+": ")
     except:
       text = ''
 

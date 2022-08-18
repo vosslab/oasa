@@ -17,7 +17,7 @@
 
 #--------------------------------------------------------------------------
 
-from __future__ import division, print_function
+
 
 import misc
 import warnings
@@ -63,7 +63,7 @@ class coords_generator(object):
         backbone = atms
       else:
         # we should not be here, but when yes than we have to solve it
-        maxlength = max( map( len, subs))
+        maxlength = max( list(map( len, subs)))
         backbone = [su for su in subs if len( su) == maxlength][0]
         # we have to set the coords to None (for sure)
         for sub in subs:
@@ -465,7 +465,7 @@ def show_mol( mol):
   try:
     from tkinter import Tk, Canvas, Frame
   except ImportError:
-    from Tkinter import Tk, Canvas, Frame
+    from tkinter import Tk, Canvas, Frame
 
   app = Tk()
   app.title( "oasa")

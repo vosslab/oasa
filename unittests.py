@@ -414,7 +414,7 @@ class TestGraphMatching(unittest.TestCase):
     mol = mols[0]
     mate, nrex = mol.get_maximum_matching()
     self.assertEqual( nrex,exposed_vs_num)
-    self.assertEqual( len( [v for v,m in mate.items() if m!=0]), 2*match_pair_num)
+    self.assertEqual( len( [v for v,m in list(mate.items()) if m!=0]), 2*match_pair_num)
 
 # this creates individual test for substructures
 for i in range( len( TestGraphMatching.formulas)):
