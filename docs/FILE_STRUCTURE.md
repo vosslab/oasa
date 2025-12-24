@@ -7,9 +7,7 @@
 - `README.md` project overview and usage notes.
 - `gpl.txt` GPL license text.
 - `setup.py` packaging metadata and install entry point.
-- `oasa_convert.py` conversion helper script.
-- `convert.py` compatibility wrapper for the converter.
-- `test.py` legacy test runner.
+- `chemical_convert.py` conversion helper script.
 - `.gitignore` and `.git/` version control metadata.
 
 ## Package layout (`oasa/`)
@@ -41,6 +39,8 @@
 - `pyflakes.txt` created by the `run_pyflakes.sh` workflow from the style guide.
 
 ## Tests (`tests/`)
+- `tests/mypy.ini` static typing configuration.
+- `tests/legacy_test.py` legacy test runner.
 - `tests/unittests.py` legacy unittest runner.
 
 ## Legacy logs

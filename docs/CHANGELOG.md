@@ -11,6 +11,7 @@
 - Moved legacy conversion logs to [docs/legacy](docs/legacy) and removed generated outputs.
 - Renamed `README` to `README.md`, removed root `__init__.py`, and relocated legacy test
   runner and virtual test script under [tests](tests).
-- Renamed `convert.py` to `oasa_convert.py`, added a wrapper, and documented usage in
+- Renamed the conversion script to `chemical_convert.py` and documented usage in
   [docs/USAGE.md](docs/USAGE.md).
 - Removed `tests/run_virtual_test.sh` (local unittests are sufficient).
+- Moved `mypy.ini` and legacy `test.py` into [tests](tests).

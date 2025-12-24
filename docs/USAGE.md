@@ -5,13 +5,12 @@
   - `pip3 install .`
 
 ## Conversion script
-- Preferred script: `oasa_convert.py`
-- Compatibility wrapper: `convert.py` (prints a deprecation notice)
+- Preferred script: `chemical_convert.py`
 
 Examples:
-- `python3 oasa_convert.py -c sm -i input.smi -o output.mol`
-- `python3 oasa_convert.py -c is -i input.inchi -o output.smi`
-- `python3 oasa_convert.py -c ms -i input.mol -o output.smi`
+- `python3 chemical_convert.py -c sm -i input.smi -o output.mol`
+- `python3 chemical_convert.py -c is -i input.inchi -o output.smi`
+- `python3 chemical_convert.py -c ms -i input.mol -o output.smi`
 
 ## Smoke rendering test
 - Requires `pycairo` in the active environment.

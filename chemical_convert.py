@@ -74,10 +74,11 @@ def parse_args():
 	Returns:
 		argparse.Namespace: Parsed arguments.
 	"""
+	script_name = os.path.basename(sys.argv[0]) or "chemical_convert.py"
 	examples = [
-		"oasa_convert.py -c sm -i input.smi -o output.mol",
-		"oasa_convert.py -c is -i input.inchi -o output.smi",
-		"oasa_convert.py -c ms -i input.mol -o output.smi",
+		f"{script_name} -c sm -i input.smi -o output.mol",
+		f"{script_name} -c is -i input.inchi -o output.smi",
+		f"{script_name} -c ms -i input.mol -o output.smi",
 	]
 	parser = argparse.ArgumentParser(
 		description="Convert between SMILES, InChI, molfile, and CDML.",
