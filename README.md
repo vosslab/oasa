@@ -1,11 +1,12 @@
 OASA is a free python library for manipulating and analyzing chemical
 structures and is distributed under GNU GPL. The program is provided as is
-without warranty of any kind. For details see the file "gpl.txt" in main oasa
+without warranty of any kind. For details see the file "LICENSE" in main oasa
 directory.
 More info can be found on the [OASA project page](https://bkchem.zirael.org/oasa_en.html).
 BKChem, the primary consumer of this library, is documented on the
 [BKChem homepage](https://bkchem.zirael.org/).
 Usage notes are in [docs/USAGE.md](docs/USAGE.md).
+Current version: 0.16beta.
 
 INSTALL
 --------------------------------------------------

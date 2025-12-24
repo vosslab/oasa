@@ -13,7 +13,7 @@
 #     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #     GNU General Public License for more details.
 
-#     Complete text of GNU GPL can be found in the file gpl.txt in the
+#     Complete text of GNU GPL can be found in the file LICENSE in the
 #     main directory of the program
 
 #--------------------------------------------------------------------------
@@ -91,6 +91,11 @@ def parse_args():
 		required=True,
 		type=conversion_type,
 		help="Two-letter conversion code, for example 'sm', 'is', or 'ms'.",
+	)
+	parser.add_argument(
+		'--version',
+		action='version',
+		version=f"%(prog)s {oasa.__version__}",
 	)
 	parser.add_argument(
 		'-i', '--input',

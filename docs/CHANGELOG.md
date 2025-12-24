@@ -15,3 +15,7 @@
   [docs/USAGE.md](docs/USAGE.md).
 - Removed `tests/run_virtual_test.sh` (local unittests are sufficient).
 - Moved `mypy.ini` and legacy `test.py` into [tests](tests).
+- Bumped version to 0.16beta.
+- Added `pyproject.toml`, `MANIFEST.in`, and richer packaging metadata for PyPI.
+- Added `__version__` to `oasa/__init__.py`.
+- Standardized license references to `LICENSE`.

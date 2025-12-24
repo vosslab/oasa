@@ -13,7 +13,7 @@
 #     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #     GNU General Public License for more details.
 #
-#     Complete text of GNU GPL can be found in the file gpl.txt in the
+#     Complete text of GNU GPL can be found in the file LICENSE in the
 #     main directory of the program
 #
 #--------------------------------------------------------------------------

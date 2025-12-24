@@ -5,8 +5,10 @@
 - `docs/` documentation set for repo-wide conventions and guides.
 - `tests/` lightweight test scripts and static check runners.
 - `README.md` project overview and usage notes.
-- `gpl.txt` GPL license text.
+- `LICENSE` license text.
 - `setup.py` packaging metadata and install entry point.
+- `pyproject.toml` build system configuration.
+- `MANIFEST.in` packaging include rules.
 - `chemical_convert.py` conversion helper script.
 - `.gitignore` and `.git/` version control metadata.
 
