@@ -17,7 +17,6 @@
 
 #--------------------------------------------------------------------------
 
-import sys
 import copy
 import math
 import cairo
@@ -832,4 +831,3 @@ if __name__ == "__main__":
 ##   from . import inchi
 ##   mol = inchi.text_to_mol( "1/C7H6O2/c8-7(9)6-4-2-1-3-5-6/h1-5H,(H,8,9)", include_hydrogens=False, calc_coords=30)
 ##   mol_to_png( mol, "output.png")
-

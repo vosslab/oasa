@@ -26,7 +26,6 @@ from . import smiles
 from . import coords_generator
 from .config import Config
 from .known_groups import name_to_smiles
-from .periodic_table import periodic_table
 from .oasa_exceptions import oasa_invalid_atom_symbol
 
 
@@ -319,4 +318,3 @@ if __name__ == "__main__":
     coords_generator.show_mol( m)
   else:
     print("nothing")
-

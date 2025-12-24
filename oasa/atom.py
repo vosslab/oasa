@@ -17,18 +17,13 @@
 
 #--------------------------------------------------------------------------
 
-import sys
-import copy
 import itertools
 
-from warnings import warn
 from operator import itemgetter
-
-from . import graph
 from . import periodic_table as PT
 from .chem_vertex import chem_vertex
 from .common import is_uniquely_sorted
-from .oasa_exceptions import oasa_invalid_atom_symbol
+from .oasa_exceptions import oasa_invalid_atom_symbol, oasa_invalid_value
 
 
 
@@ -174,7 +169,7 @@ class atom(chem_vertex):
   def isotope(self, isotope):
     if isotope is not None and not isinstance(isotope, int):
       # isotope must be a number or None
-      raise oasa_exceptions.oasa_invalid_value( "isotope", isotope)
+      raise oasa_invalid_value( "isotope", isotope)
     self._isotope = isotope
 
 

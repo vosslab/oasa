@@ -25,8 +25,6 @@ Suitable for analysis of chemical problems.
 
 
 import copy
-import time
-import operator
 import warnings
 
 from .edge import edge
@@ -308,7 +306,6 @@ class graph(object):
   def get_connected_components( self):
     """returns the connected components of graph in a form o list of lists of vertices"""
     comp = set() # just processed component
-    comps = []
     not_processed = set( self.vertices)
     if not_processed:
       recent = set() # [not_processed.pop()])
@@ -787,13 +784,10 @@ class graph(object):
     the result is the last value, it is only interesting for monitoring of the computation
     as it can be pretty time consuming"""
     diameter = 0
-    best = None
-    best_path = None
     for v in self.vertices:
       dist = self.mark_vertices_with_distance_from( v)
       if dist > diameter:
         diameter = dist
-        best = v
         #end = [x for x in self.vertices if x.properties_['d'] == dist][0]
         #best_path = get_path_down_to( end, v)
         yield diameter
@@ -1390,7 +1384,6 @@ def gen_variations(items, n):
 
 
 from threading import Thread
-import time
 
 
 
@@ -1440,4 +1433,3 @@ class MyThread(Thread):
 ## print('cycles %d, lengths %s' % (len( c), str( map( len, c))))
 ## c = g.get_all_cycles()
 ## print('cycles %d, lengths %s' % (len( c), str( map( len, c))))
-

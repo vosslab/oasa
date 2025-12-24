@@ -18,7 +18,6 @@
 #--------------------------------------------------------------------------
 
 import copy
-import math
 import xml.dom.minidom as dom
 
 from . import misc
@@ -186,11 +185,11 @@ class svg_out(object):
   def _draw_line( self, parent, start, end, line_width=1, capstyle=""):
     x1, y1 = start
     x2, y2 = end
-    line = dom_extensions.elementUnder( parent, 'line',
-                                        (( 'x1', str( x1)),
-                                         ( 'y1', str( y1)),
-                                         ( 'x2', str( x2)),
-                                         ( 'y2', str( y2))))
+    dom_extensions.elementUnder( parent, 'line',
+                                 (( 'x1', str( x1)),
+                                  ( 'y1', str( y1)),
+                                  ( 'x2', str( x2)),
+                                  ( 'y2', str( y2))))
 
 
   def _draw_text( self, parent, xy, text, font_name="Arial", font_size=16):
@@ -246,4 +245,3 @@ if __name__ == "__main__":
   from . import molfile
   mol = molfile.file_to_mol(open("/home/beda/bkchem/bkchem/untitled0.mol", "r"))
   mol_to_svg( mol, "output.svg")
-

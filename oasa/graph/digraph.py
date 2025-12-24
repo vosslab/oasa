@@ -24,8 +24,6 @@ Suitable for analysis of chemical problems.
 
 
 
-import copy
-import operator
 import warnings
 
 from . import graph
@@ -71,13 +69,11 @@ class digraph(graph.graph):
 
   def get_diameter( self):
     diameter = 0
-    best = None
     best_path = None
     for v in self.vertices:
       dist = self.mark_vertices_with_distance_from( v)
       if dist > diameter:
         diameter = dist
-        best = v
         end = [x for x in self.vertices if 'd' in x.properties_ and x.properties_['d'] == dist][0]
         best_path = self.get_random_longest_path_numbered( v, end)
 
@@ -91,7 +87,6 @@ class digraph(graph.graph):
   def get_connected_components( self):
     """returns the connected components of graph in a form o list of lists of vertices"""
     comp = set() # just processed component
-    comps = []
     not_processed = set( self.vertices)
     if not_processed:
       recent = set() # [not_processed.pop()])
@@ -150,4 +145,3 @@ class digraph(graph.graph):
       ret += '"%s" [label="%s"];\n' % (v,v.value)
     ret += "}"
     return ret
-

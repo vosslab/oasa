@@ -21,9 +21,7 @@
 
 import re
 import os
-import sys
 import string
-import select
 import xml.dom.minidom as dom
 
 from . import misc
@@ -279,7 +277,7 @@ class inchi( plugin):
       # we can skip movable hydrogens
       self._read_simple_hydrogen_layer( fixed_layer)
     else:
-      re_for_brackets = "\([H\d,\-]+?\)"
+      re_for_brackets = r"\([H\d,\-]+?\)"
       brackets = re.findall( re_for_brackets, layer)
       for bracket in brackets:
         self._process_moving_hydrogen( bracket[1:-1], run=run)
@@ -296,7 +294,7 @@ class inchi( plugin):
     """just takes the layer and adds hydrogens according to what it seas,
     it does not care about moving hydrogens and stuff"""
 
-    re_for_brackets = "\([H\d,\-]+?\)"
+    re_for_brackets = r"\([H\d,\-]+?\)"
     layer = re.sub( re_for_brackets, "", layer)  # clean the brackets out
 
     for vs, num in self._parse_h_layer( layer):
@@ -401,7 +399,7 @@ class inchi( plugin):
           break
 
     if charge:
-      raise oasa_exceptions.oasa_inchi_error( "The molecular charge could not be allocated to any atom (%d)." % charge)
+      raise oasa_inchi_error( "The molecular charge could not be allocated to any atom (%d)." % charge)
 
 
 
@@ -495,10 +493,9 @@ class inchi( plugin):
     layer = self.get_layer( "b")
     if not layer:
       return
-    for a1,a2,sign in re.findall( "(\d+)-(\d+)([-+?u])", layer):
+    for a1,a2,sign in re.findall( r"(\d+)-(\d+)([-+?u])", layer):
       atom1 = self.get_atom_with_inchi_number( int( a1))
       atom2 = self.get_atom_with_inchi_number( int( a2))
-      bond = self.structure.get_edge_between( atom1, atom2)
       # we need neighbors with lowest inchi_number
       neigh1 = get_lowest_numbered_neighbor( atom1, atom2)
       neigh2 = get_lowest_numbered_neighbor( atom2, atom1)
@@ -533,7 +530,7 @@ class inchi( plugin):
 
     ret = 0
 
-    re_for_brackets = "\([H\d,\-]+?\)"
+    re_for_brackets = r"\([H\d,\-]+?\)"
     brackets = re.findall( re_for_brackets, layer)
     for bracket in brackets:
       ret += self._get_hs_in_moving_hydrogen( bracket[1:-1])
@@ -634,7 +631,7 @@ class inchi( plugin):
     for chunk in chunks:
       try:
         head, tail = chunk.split( 'H')
-      except Exception as e:
+      except Exception:
         raise oasa_inchi_error( "error in hydrogen layer - missing H symbol")
       num_h = tail and int( tail) or 1
       vertices = []
@@ -642,13 +639,13 @@ class inchi( plugin):
         if "-" in p:
           try:
             a, b = list(map( int, p.split("-")))
-          except Exception as e:
+          except Exception:
             raise oasa_inchi_error( "error in hydrogen layer - non-number character(s) present in atom range specification")
           vertices.extend( list(range( a, b+1)))
         else:
           try:
             vertices.append( int( p))
-          except Exception as e:
+          except Exception:
             raise oasa_inchi_error( "error in hydrogen layer - non-number character(s) present in atom specification")
 
       yield vertices, num_h
@@ -931,4 +928,3 @@ if __name__ == '__main__':
 
 
 ##################################################
-

@@ -27,13 +27,6 @@ fit anywhere else. Does not contain any objects.
 
 import re
 import sys
-import math
-import time
-import types
-import string
-import base64
-
-from warnings import warn
 
 
 
@@ -112,7 +105,7 @@ def split_number_and_unit( txt):
     return v, ''
   except:
     pass
-  cutter = re.compile( "([+-]?\d*\.?\d*)\s*([a-zA-Z]*)")
+  cutter = re.compile( r"([+-]?\d*\.?\d*)\s*([a-zA-Z]*)")
   if txt:
     a = cutter.match( txt)
     if a and a.group(1):
@@ -188,7 +181,7 @@ def reverse( iterable):
 
 # some helper, higher order functions
 
-map_functions = lambda funcs, value: list(zip( apply, funcs, len(funcs)*[value]))
+map_functions = lambda funcs, value: [lazy_apply(func, (value,)) for func in funcs]
 
 something_true = lambda vals: len( [_f for _f in vals if _f])
 
@@ -237,4 +230,3 @@ def gen_variations_and_one( items, length):
     vars = gen_variations( [x for x in items if x!=i], length-1)
     for vs in vars:
       yield vs + [i]
-

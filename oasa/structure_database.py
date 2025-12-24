@@ -135,12 +135,12 @@ def get_compounds_from_database( database_file=None, **kw):
         sql = "SELECT structures.* FROM %s" % (tables)
     connection = sqlite.connect( Config.database_file)
     c = connection.cursor()
+    c2 = connection.cursor()
     try:
         c.execute( sql, values)
     except sqlite.OperationalError as e:
         raise oasa_exceptions.oasa_error( "Error reading from structure database: '%s'" % e)
     ret = []
-    c2 = connection.cursor()
     for row in c:
         c2.execute( "SELECT synonym FROM synonyms WHERE id=%d" % row[0])
         synonyms = list( c2)
@@ -163,7 +163,7 @@ def _allow_molecule( name, smile):
     if smile.count("+]") > 2:
         # more than 2 positive charges
         return False
-    if re.search( "\[\d", smile):
+    if re.search( r"\[\d", smile):
         return False
     if smile.count(".") > 2:
         return False
@@ -214,7 +214,6 @@ def add_synonyms_old( fname, only_first=3):
     f = _open_infile( fname)
     connection = sqlite.connect( Config.database_file)
     c = connection.cursor()
-    c2 = connection.cursor()
     i = 0
     last_cid = None
     line_count = 0
@@ -225,7 +224,7 @@ def add_synonyms_old( fname, only_first=3):
         if last_cid != cid:
             last_cid == cid
             count = 1
-            exists = _is_cid_in_db( cid, c2)
+            exists = _is_cid_in_db( cid, c)
         else:
             count += 1
         if exists and count <= only_first:
@@ -250,7 +249,6 @@ def add_synonyms( fname, only_first=3):
     f = _open_infile( fname)
     connection = sqlite.connect( Config.database_file)
     c = connection.cursor()
-    c2 = connection.cursor()
     i = 0
     last_cid = None
     line_count = 0

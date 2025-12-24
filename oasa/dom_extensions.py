@@ -77,7 +77,7 @@ def childNodesWithoutEmptySpaces( node):
 
 
 def isNotEmptyText( element):
-  empty = re.compile('^\s*$')
+  empty = re.compile(r'^\s*$')
   if element.nodeValue and empty.match( element.nodeValue): #(element.nodeValue == '\n') or (element.nodeValue == '\t'):
     return 0
   else:
@@ -152,4 +152,3 @@ def _atomicXPathSearch( element, path):
     return element.childNodes
   else:
     return element.getElementsByTagName( path)
-

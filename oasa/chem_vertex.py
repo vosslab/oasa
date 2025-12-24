@@ -17,14 +17,8 @@
 
 #--------------------------------------------------------------------------
 
-import sys
-import copy
-
-from warnings import warn
-
 from . import graph
 from . import periodic_table as PT
-from .common import is_uniquely_sorted
 
 
 
@@ -198,4 +192,3 @@ class chem_vertex(graph.vertex):
 
   def get_hydrogen_count( self):
     return 0
-

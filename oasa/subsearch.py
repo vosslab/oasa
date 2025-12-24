@@ -20,6 +20,7 @@
 
 
 import os
+import sys
 
 from . import smiles
 from .graph.digraph import digraph
@@ -181,7 +182,6 @@ class substructure_search_manager( object):
       if keep:
         hits.append( hit)
     # weed out overlapping hits - leave only the most significant ones
-    hit_num = len( hits)
     to_delete = True
     while to_delete:
       to_delete = []

@@ -226,7 +226,6 @@ class molecule(graph.graph):
         now.add( v)
         new = set( now)
         while new:
-          added = False
           now_new = set()
           for v in new:
             for n in v.neighbors:
@@ -334,7 +333,6 @@ class molecule(graph.graph):
             else:
               to_process.append( b)
           to_process_atoms = self.edge_subgraph_to_vertex_subgraph( to_process)
-          processed = [v for v in cluster if not v in to_process_atoms]
           # now we use the maximum_matching graph algorithm to localize the bonds
           work_graph = self.get_induced_copy_subgraph_from_vertices_and_edges( to_process_atoms, to_process, add_back_links=True)
           #return work_graph
@@ -842,8 +840,8 @@ class molecule(graph.graph):
     # detect config on these paths
     for path in double_paths:
         vertices = []
-        for bond in path:
-          vertices.extend( bond.vertices)
+        for bond_item in path:
+          vertices.extend( bond_item.vertices)
         ends = [v for v in vertices if vertices.count(v) == 1]
         if len( ends) != 2: # two ends is the only thing we are prepared to handle
           continue
@@ -870,7 +868,6 @@ class molecule(graph.graph):
                 refs = [n1,end1,end2,n2]
                 st = stereochemistry.cis_trans_stereochemistry( center=center, value=value, references=refs)
                 to_remove = None
-                to_add = None
                 for st1 in self.stereochemistry:
                   if set( st1.references) == set( st.references):
                     if st.value == st1.value:
@@ -1058,4 +1055,3 @@ if __name__ == '__main__':
 # test the equals function
 
 ##################################################
-

@@ -24,7 +24,6 @@
 
 
 
-import operator
 
 from math import sqrt, atan2, pi, cos, sin
 
@@ -500,7 +499,6 @@ def plane_normal_from_3_points( point1, point2, point3):
   x1,y1,z1 = point1
   x2,y2,z2 = point2
   x3,y3,z3 = point3
-  m0 = transform.matrix( [[x1,y1,z1],[x2,y2,z2],[x3,y3,z3]])
   m1 = transform.matrix( [[1,y1,z1],[1,y2,z2],[1,y3,z3]])
   m2 = transform.matrix( [[x1,1,z1],[x2,1,z2],[x3,1,z3]])
   m3 = transform.matrix( [[x1,y1,1],[x2,y2,1],[x3,y3,1]])
@@ -599,4 +597,3 @@ def create_transformation_to_rotate_around_particular_axis( line_start, line_end
   from .transform3d import transform3d
   t = transform3d( [[m11,m12,m13,m14],[m21,m22,m23,m24],[m31,m32,m33,m34],[0,0,0,1]])
   return t
-

@@ -191,7 +191,6 @@ class coords_generator(object):
 
 
   def process_one_anelated_ring( self, base):
-    mol = self.mol
     out = []
     ring = None
     b = set( base)
@@ -524,12 +523,11 @@ def calculate_coords( mol, bond_length=0, force=0):
 if __name__ == '__main__':
 
   from . import smiles
-  from .molecule import molecule
 
   #sm = "CP(c1ccccc1)(c2ccccc2)c3ccccc3"
   #sm = 'C1CC2C1CCCC3C2CC(CCC4)C4C3'
   #sm = "C\C=C/CC#CCCCC\C=C=C=C/CC"
-  sm = "C/C(Cl)=C(\O)C"
+  sm = r"C/C(Cl)=C(\O)C"
   #sm = "C1CCC1C/C=C\CCCCC"
   #sm = "C25C1C3C5C4C2C1C34"
   #sm = 'C1CC2CCC1CC2'

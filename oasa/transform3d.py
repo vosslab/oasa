@@ -21,7 +21,7 @@
 
 """
 
-from math import cos, sin, pi
+from math import cos, sin
 
 
 
@@ -207,4 +207,3 @@ class matrix(object):
   @staticmethod
   def _determinant_3( _m):
       return (((_m[0][0] * _m[1][1] * _m[2][2]) + (_m[0][1] * _m[1][2] * _m[2][0]) + (_m[0][2] * _m[1][0] * _m[2][1])) - ((_m[2][1] * _m[1][2] * _m[0][0]) + (_m[2][2] * _m[1][0] * _m[0][1]) + (_m[2][0] * _m[1][1] * _m[0][2])))
-

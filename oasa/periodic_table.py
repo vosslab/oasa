@@ -168,7 +168,6 @@ class composition_dict( dict):
         if ret:
           ret += ', '
         ret += "%s: %2.3f%%" % (n, self[n])
-    k = sorted(self.keys())
     for n in self:
       if n not in ('C','H'):
         if ret:
@@ -325,7 +324,6 @@ class formula_dict( dict):
 
 
 def dict_to_composition( form):
-  w = form.get_molecular_weight()
   ret = composition_dict()
   for s in form:
     ret[ s] = form.get_element_fraction(s) * 100
@@ -338,18 +336,18 @@ def formula_to_formula( formula):
   return str( formula_dict( formula))
 
 def formula_to_composition( formula):
-  return dict_to_composition( formula_to_dict( formula))
+  return dict_to_composition( formula_dict( formula))
 
 
 ## other support functions
 
 def text_to_hydrogenated_atom( text):
-  a = re.match( '^([a-z]{1,2})(h)(\d*)$', text.lower())
+  a = re.match( r'^([a-z]{1,2})(h)(\d*)$', text.lower())
   if a:
     atom = a.group( 1)
     hydrogens = a.group( 3)
   else:
-    a = re.match( '^(h)(\d*)([a-z]{1,2})$', text.lower())
+    a = re.match( r'^(h)(\d*)([a-z]{1,2})$', text.lower())
     if a:
       atom = a.group( 3)
       hydrogens = a.group( 2)
@@ -384,4 +382,3 @@ def gen_bit_masks( length):
       else:
         break
     yield ret
-

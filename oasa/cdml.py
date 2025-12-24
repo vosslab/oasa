@@ -23,7 +23,6 @@ import xml.dom.minidom as dom
 
 from . import smiles
 from . import dom_extensions as dom_ext
-from .plugin import plugin
 from .atom import atom
 from .bond import bond
 from .molecule import molecule
@@ -45,7 +44,6 @@ def read_cdml( text):
   for mol_el in dom_ext.simpleXPathSearch( doc, path):
     atom_id_remap = {}
     mol = molecule()
-    groups = []
     for atom_el in dom_ext.simpleXPathSearch( mol_el, "atom"):
       name = atom_el.getAttribute( 'name')
       if not name:
@@ -103,11 +101,6 @@ def cm_to_float_coord( x):
 
 ##################################################
 # MODULE INTERFACE
-
-try:
-  from io import StringIO
-except ImportError:
-  from io import StringIO
 
 reads_text = 1
 reads_files = 1

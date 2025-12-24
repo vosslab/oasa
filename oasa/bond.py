@@ -29,8 +29,6 @@ import sys
 sys.path.append( '../')
 import math
 
-from warnings import warn
-
 from . import graph
 
 

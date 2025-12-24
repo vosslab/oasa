@@ -19,8 +19,6 @@
 
 import copy
 
-from warnings import warn
-
 
 
 class edge(object):
@@ -81,4 +79,3 @@ class edge(object):
   @disconnected.setter
   def disconnected(self, d):
     self._disconnected = d
-

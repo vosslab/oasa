@@ -335,7 +335,7 @@ class TestStereo2(unittest.TestCase):
     sts1 = [create_st_sum( st) for st in mol.stereochemistry]
     # round 2
     smile2 = conv.mols_to_text( [mol])
-    mols = conv.read_text( smile1)
+    mols = conv.read_text( smile2)
     self.assertEqual( len( mols), 1)
     mol = mols[0]
     sts2 = [create_st_sum( st) for st in mol.stereochemistry]

@@ -19,10 +19,7 @@
 
 
 
-from . import misc
-import warnings
-
-from math import pi, sqrt, sin, cos, atan2
+from math import pi, sqrt, sin, cos
 
 #from . import graph
 from . import geometry

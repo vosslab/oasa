@@ -1250,7 +1250,7 @@ def key_from_inchi_old( inp):
 def check_inchi_key( key):
   """checks the InChIKey using the algorithm described in the manual to InChI 1.02beta;
   check character is not used in 1.02 final"""
-  assert myisstr(key)
+  assert misc.myisstr(key)
   if key.startswith( "InChIKey="):
     key = key[9:]
   m = re.match( "^([A-Z]{14})-([A-Z]{9})([A-Z])$", key)
@@ -1269,13 +1269,13 @@ import string
 
 def key_from_inchi( inp):
   """this is for new InChIKey starting with 1.02 release"""
-  assert myisstr(inp)
+  assert misc.myisstr(inp)
   if inp.startswith("InChI="):
     inp = inp[6:]
   parts = inp.split( "/")
   if not parts:
     raise Exception( "Invalid InChI string '%s'" % inp)
-  m = re.match( "(\d)(S)?", parts[0])
+  m = re.match( r"(\d)(S)?", parts[0])
   if not m:
     raise Exception( "Invalid data in version part of InChI - '%s' in '%s'" % (parts[0], inp))
   else:
@@ -1346,4 +1346,3 @@ if __name__ == "__main__":
             print(key)
 
         odd = not odd
-

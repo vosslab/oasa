@@ -18,15 +18,11 @@
 #--------------------------------------------------------------------------
 
 import re
-import copy
 
 from warnings import warn
-
-from . import graph
 from . import periodic_table as PT
 from .atom import atom
 from .chem_vertex import chem_vertex
-from .common import is_uniquely_sorted
 from .oasa_exceptions import oasa_invalid_atom_symbol
 
 
@@ -108,7 +104,7 @@ class query_atom( chem_vertex):
 
   @classmethod
   def is_query_definition(self, text):
-    matcher = re.compile( "\[([A-Z][a-z]?,)*[A-Z][a-z]?\]")
+    matcher = re.compile( r"\[([A-Z][a-z]?,)*[A-Z][a-z]?\]")
     return matcher.match( text) and True or False
 
 
@@ -122,4 +118,3 @@ class query_atom( chem_vertex):
       return syms
     else:
       raise oasa_invalid_atom_symbol( "not valid query definition", text)
-

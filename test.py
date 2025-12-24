@@ -17,7 +17,7 @@ def cairo_out_test2():
     c.mols_to_cairo( mols, "test.svg", format="svg")
 
 def inchi_test():
-    mol = oasa.smiles.text_to_mol( "c1ccccc1\C=C/CC")
+    mol = oasa.smiles.text_to_mol( r"c1ccccc1\C=C/CC")
     print(oasa.inchi.mol_to_text(mol, program="stdinchi-1.exe", fixed_hs=False))
 
 cairo_out_test2()
