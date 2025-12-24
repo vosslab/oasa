@@ -4,13 +4,12 @@
 - `oasa/` package source code.
 - `docs/` documentation set for repo-wide conventions and guides.
 - `tests/` lightweight test scripts and static check runners.
-- `README` project overview and usage notes.
+- `README.md` project overview and usage notes.
 - `gpl.txt` GPL license text.
 - `setup.py` packaging metadata and install entry point.
-- `convert.py` small conversion helper script.
-- `test.py` and `unittests.py` test runners.
-- `run-virtual-test.sh` helper script for a virtualized test run.
-- `__init__.py` top-level package marker for legacy layouts.
+- `oasa_convert.py` conversion helper script.
+- `convert.py` compatibility wrapper for the converter.
+- `test.py` legacy test runner.
 - `.gitignore` and `.git/` version control metadata.
 
 ## Package layout (`oasa/`)
@@ -34,11 +33,15 @@
 - `docs/AUTHORS.md` maintainers and contributors.
 - `docs/CODE_ARCHITECTURE.md` system overview and data flow.
 - `docs/FILE_STRUCTURE.md` directory map and generated assets.
+- `docs/USAGE.md` usage notes and examples.
 
 ## Generated or temporary outputs
 - `__pycache__/` and `*.pyc` created by Python execution.
 - `build/`, `dist/`, and `oasa.egg-info/` created by packaging tools.
 - `pyflakes.txt` created by the `run_pyflakes.sh` workflow from the style guide.
+
+## Tests (`tests/`)
+- `tests/unittests.py` legacy unittest runner.
 
 ## Legacy logs
 - `docs/legacy/2to3-all.log` and `docs/legacy/2to3-import.log` 2to3 conversion logs.

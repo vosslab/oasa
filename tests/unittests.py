@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #--------------------------------------------------------------------------
 #     This file is part of OASA - a free chemical python library
 #     Copyright (C) 2003-2008 Beda Kosata <beda@zirael.org>
@@ -17,7 +18,13 @@
 
 #--------------------------------------------------------------------------
 
+import os
+import sys
 import unittest
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if ROOT_DIR not in sys.path:
+  sys.path.insert(0, ROOT_DIR)
 
 from oasa import linear_formula
 from oasa import smiles

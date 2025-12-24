@@ -697,7 +697,7 @@ class smiles_converter( converter_base):
     for mol in structures:
       if self.configuration["W_AROMATIC_BOND_AUTODETECT"]:
         mol.mark_aromatic_bonds()
-      if self.configuration["W_DETECT_STEREO_FROM_COORDS"]:
+      if self.configuration["W_DETECT_STEREO_FROM_COORDS"] and not mol.stereochemistry:
         mol.detect_stereochemistry_from_coords()
       ret.append( sm.get_smiles( mol))
     self.last_status = self.STATUS_OK

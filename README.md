@@ -5,6 +5,7 @@ directory.
 More info can be found on the [OASA project page](https://bkchem.zirael.org/oasa_en.html).
 BKChem, the primary consumer of this library, is documented on the
 [BKChem homepage](https://bkchem.zirael.org/).
+Usage notes are in [docs/USAGE.md](docs/USAGE.md).
 
 INSTALL
 --------------------------------------------------

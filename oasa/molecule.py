@@ -868,15 +868,17 @@ class molecule(graph.graph):
                 refs = [n1,end1,end2,n2]
                 st = stereochemistry.cis_trans_stereochemistry( center=center, value=value, references=refs)
                 to_remove = None
+                found = False
                 for st1 in self.stereochemistry:
                   if set( st1.references) == set( st.references):
+                    found = True
                     if st.value == st1.value:
                       break
                     else:
                       to_remove = st1
                       break
-                  else:
-                    self.add_stereochemistry(st)
+                if not found:
+                  self.add_stereochemistry(st)
                 if to_remove:
                   self.remove_stereochemistry( to_remove)
 

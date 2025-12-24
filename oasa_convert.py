@@ -53,15 +53,15 @@ def conversion_type(text):
 		tuple: (input_mode, output_mode)
 	"""
 	if len(text) != 2:
-		message = "Conversion code must be exactly two letters, for example 'sm'."
+		message = "Conversion code must be exactly two letters, for example 'sm' or 'is'."
 		raise argparse.ArgumentTypeError(message)
 	inmode = text[0]
 	outmode = text[1]
 	if inmode not in RECODING:
-		message = "Input mode must be one of s,i,m,c."
+		message = "Input mode must be one of s,i,m,c (smiles, inchi, molfile, cdml)."
 		raise argparse.ArgumentTypeError(message)
 	if outmode not in OUTPUT_MODES:
-		message = "Output mode must be one of s,i,m."
+		message = "Output mode must be one of s,i,m (smiles, inchi, molfile)."
 		raise argparse.ArgumentTypeError(message)
 	result = (inmode, outmode)
 	return result
@@ -74,15 +74,22 @@ def parse_args():
 	Returns:
 		argparse.Namespace: Parsed arguments.
 	"""
+	examples = [
+		"oasa_convert.py -c sm -i input.smi -o output.mol",
+		"oasa_convert.py -c is -i input.inchi -o output.smi",
+		"oasa_convert.py -c ms -i input.mol -o output.smi",
+	]
 	parser = argparse.ArgumentParser(
 		description="Convert between SMILES, InChI, molfile, and CDML.",
+		formatter_class=argparse.RawDescriptionHelpFormatter,
+		epilog="Examples:\n  " + "\n  ".join(examples),
 	)
 	parser.add_argument(
 		'-c', '--conversion',
 		dest='conversion',
 		required=True,
 		type=conversion_type,
-		help="Two-letter conversion code, for example 'sm' or 'is'.",
+		help="Two-letter conversion code, for example 'sm', 'is', or 'ms'.",
 	)
 	parser.add_argument(
 		'-i', '--input',
